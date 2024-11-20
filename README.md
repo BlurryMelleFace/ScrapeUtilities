@@ -31,7 +31,7 @@ This repository provides tools and scripts to simplify the process of scraping a
 ## **Setup Instructions**
 
 ### **1. Prerequisites**
-1. Install Python 3.9+.
+1. Install Python 3.11
 2. Install Poetry for dependency management:
    ```bash
    curl -sSL https://install.python-poetry.org | python3 -
@@ -70,26 +70,6 @@ This repository provides tools and scripts to simplify the process of scraping a
      ```
    - A pop-up window will allow you to paste multiple URLs (one per line).
    - Images will be downloaded into structured subdirectories inside the `Scraped/` folder (e.g., `Scraped/Website_1`, `Scraped/Website_2`).
-
----
-
-## **Development**
-
-To work within the Poetry virtual environment:
-1. Activate the environment:
-   ```bash
-   poetry shell
-   ```
-2. Run your scripts directly:
-   ```bash
-   python scrapeDirectory.py
-   ```
-3. Exit the environment when done:
-   ```bash
-   exit
-   ```
-
----
 
 ## **License**
 This project is licensed under the MIT License.
