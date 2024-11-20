@@ -1,0 +1,3 @@
+# Ignore contents of Scraped folder but keep the folder itself
+Scraped/*
+!Scraped/.gitkeep

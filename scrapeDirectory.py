@@ -60,11 +60,16 @@ if __name__ == "__main__":
     # Get the directory where this script is located
     script_directory = os.path.dirname(os.path.abspath(__file__))
 
+    # Create a "Scraped" folder in the script's directory
+    scraped_folder = os.path.join(script_directory, "Scraped")
+    os.makedirs(scraped_folder, exist_ok=True)  # Ensure "Scraped" folder exists
+
     print("Please select the directory to scrape.")
     directory_path = select_directory()
     if directory_path:
         selected_folder_name = os.path.basename(directory_path.rstrip(os.sep))  # Name of the selected folder
-        output_folder = os.path.join(script_directory, selected_folder_name)  # Create output folder in script's directory
+        # Create a subfolder inside "Scraped" with the name of the selected folder
+        output_folder = os.path.join(scraped_folder, selected_folder_name)
         os.makedirs(output_folder, exist_ok=True)  # Ensure output folder exists
 
         print(f"Selected directory: {directory_path}")
