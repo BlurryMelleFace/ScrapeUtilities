@@ -12,7 +12,7 @@ def select_directory():
 
 # Function to read all file contents and write them to multiple files if larger than 10MB
 def combine_file_contents(dir_path, output_folder):
-    valid_extensions = ['.txt', '.py', '.md', '.yml', '.toml', '.md', '.json']
+    valid_extensions = ['.txt', '.py', '.md', '.yml', '.toml', '.md', '.json','.yaml']
     max_file_size = 10 * 1024 * 1024  # Maximum file size in bytes (10MB)
     file_counter = 1
     current_file_size = 0
@@ -28,6 +28,8 @@ def combine_file_contents(dir_path, output_folder):
         return
 
     for root, dirs, files in os.walk(dir_path):
+        if '.venv' in dirs:
+            dirs.remove('.venv')
         for file_name in files:
             file_path = os.path.join(root, file_name)
             _, file_extension = os.path.splitext(file_name)
