@@ -54,8 +54,12 @@ def combine_file_contents(dir_path, output_folder):
 
 # Add context menu entry
 def add_to_context_menu():
-    python_interpreter = sys.executable
-    script_path = os.path.abspath(__file__)
+    # Dynamically determine the correct path
+    if getattr(sys, 'frozen', False):  # Packaged with PyInstaller
+        app_path = sys.executable
+    else:
+        app_path = os.path.abspath(__file__)
+
     reg_path = r"Directory\shell\RunMyApp"
     command_path = rf"{reg_path}\command"
 
@@ -63,20 +67,29 @@ def add_to_context_menu():
         with reg.CreateKey(reg.HKEY_CLASSES_ROOT, reg_path) as key:
             reg.SetValue(key, '', reg.REG_SZ, "Run My App")
         with reg.CreateKey(reg.HKEY_CLASSES_ROOT, command_path) as key:
-            reg.SetValue(key, '', reg.REG_SZ, f'"{python_interpreter}" "{script_path}" "%1"')
+            reg.SetValue(key, '', reg.REG_SZ, f'"{app_path}" "%1"')
         print("Context menu entry successfully added!")
     except Exception as e:
         print(f"Error adding to context menu: {e}")
 
-# Remove context menu entry
 def remove_from_context_menu():
     reg_path = r"Directory\shell\RunMyApp"
     try:
-        reg.DeleteKey(reg.HKEY_CLASSES_ROOT, reg_path + r"\command")
-        reg.DeleteKey(reg.HKEY_CLASSES_ROOT, reg_path)
+        # Delete the 'command' subkey first
+        with reg.OpenKey(reg.HKEY_CLASSES_ROOT, reg_path + r"\command", 0, reg.KEY_WRITE) as command_key:
+            reg.DeleteKey(reg.HKEY_CLASSES_ROOT, reg_path + r"\command")
+            print("Deleted 'command' subkey.")
+
+        # Delete the 'RunMyApp' key
+        with reg.OpenKey(reg.HKEY_CLASSES_ROOT, reg_path, 0, reg.KEY_WRITE) as runmyapp_key:
+            reg.DeleteKey(reg.HKEY_CLASSES_ROOT, reg_path)
+            print("Deleted 'RunMyApp' key.")
+
         print("Context menu entry successfully removed!")
     except FileNotFoundError:
         print("Context menu entry not found.")
+    except PermissionError:
+        print("Permission denied. Please run the script as an administrator.")
     except Exception as e:
         print(f"Error removing context menu entry: {e}")
 
