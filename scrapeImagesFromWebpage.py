@@ -1,9 +1,26 @@
 import os
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 import tkinter as tk
 from tkinter import messagebox
+
+
+def get_domain_name(url):
+    """
+    Extracts the domain name from a URL.
+    
+    Args:
+        url (str): The URL to extract the domain name from.
+    
+    Returns:
+        str: The domain name (e.g., "google.de").
+    """
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc  # Extracts "www.google.de"
+    if domain.startswith("www."):
+        domain = domain[4:]  # Remove "www."
+    return domain
 
 
 def download_images_from_url(url, output_folder):
@@ -59,7 +76,7 @@ def download_images_from_url(url, output_folder):
         print(f"Error processing {url}: {e}")
 
 
-def scrape_images(urls, base_output_folder='Scraped_Images'):
+def scrape_images(urls, base_output_folder='Scraped'):
     """
     Scrapes images from a list of URLs and organizes them into separate folders.
 
@@ -70,9 +87,9 @@ def scrape_images(urls, base_output_folder='Scraped_Images'):
     Returns:
         None
     """
-    for i, url in enumerate(urls, 1):
-        folder_name = f"Website_{i}"
-        output_folder = os.path.join(base_output_folder, folder_name)
+    for url in urls:
+        domain_name = get_domain_name(url)
+        output_folder = os.path.join(base_output_folder, domain_name)
         print(f"Scraping images from: {url}")
         download_images_from_url(url, output_folder)
     messagebox.showinfo("Success", "Image scraping completed!")
