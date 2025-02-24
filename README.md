@@ -1,4 +1,3 @@
-
 # **ScrapeUtilities**
 
 This repository provides tools and scripts to simplify the process of scraping and organizing scraped content. Designed for users dealing with repetitive data extraction tasks, such as those for **Generative AI applications**.
@@ -12,6 +11,7 @@ This repository provides tools and scripts to simplify the process of scraping a
   - Allows the user to select a directory to scrape using a pop-up window.
   - Organizes scraped content into a `Scraped` folder.
   - Automatically excludes dynamic content from version control using `.gitignore`.
+  - Can be added to the Windows **context menu** for quick access.
 
 - **[`scrapeImagesFromWebpage.py`](scrapeImagesFromWebpage.py):**  
   A Python script that downloads all images from one or more provided URLs and organizes them into structured folders.  
@@ -70,6 +70,26 @@ This repository provides tools and scripts to simplify the process of scraping a
      ```
    - A pop-up window will allow you to paste multiple URLs (one per line).
    - Images will be downloaded into structured subdirectories inside the `Scraped/` folder (e.g., `Scraped/Website_1`, `Scraped/Website_2`).
+
+---
+
+## **3. Adding `scrapeDirectory.py` to the Windows Context Menu**
+You can add `scrapeDirectory.py` to the Windows **right-click context menu** for quick access to directory scraping.
+
+### **Adding the script to the context menu**
+Run the following command in an **Administrator** command prompt:
+```sh
+python scrapeDirectory.py add
+```
+This will add a **"Run My App"** option when you right-click on any folder.
+
+### **Removing the script from the context menu**
+If you wish to remove the context menu entry, run:
+```sh
+python scrapeDirectory.py remove
+```
+
+---
 
 ## **License**
 This project is licensed under the MIT License.
