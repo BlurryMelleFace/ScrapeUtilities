@@ -54,33 +54,34 @@ def combine_file_contents(dir_path, output_folder):
     outfile.close()
 
 def add_to_context_menu():
-    app_path = sys.executable  # This will point to the .exe when packaged with PyInstaller
+    app_path = sys.executable  # Path to Python executable
+    script_path = os.path.abspath(__file__)  # Path to this script
+    icon_path = os.path.join(os.path.dirname(script_path), "scrape_icon.ico")  # Path to the icon
 
-    reg_path = r"Directory\shell\RunMyApp"
+    reg_path = r"Directory\shell\ScrapeThisDirectory"
     command_path = rf"{reg_path}\command"
 
     try:
         with reg.CreateKey(reg.HKEY_CLASSES_ROOT, reg_path) as key:
-            reg.SetValue(key, '', reg.REG_SZ, "Run My App")
+            reg.SetValue(key, '', reg.REG_SZ, "Scrape This Directory")
+            reg.SetValueEx(key, "Icon", 0, reg.REG_SZ, icon_path)  # Add an icon
+
         with reg.CreateKey(reg.HKEY_CLASSES_ROOT, command_path) as key:
-            reg.SetValue(key, '', reg.REG_SZ, f'"{app_path}" "%1"')
+            reg.SetValue(key, '', reg.REG_SZ, f'"{app_path}" "{script_path}" "%1"')  # Explicitly run script
+
         print("Context menu entry successfully added!")
     except Exception as e:
         print(f"Error adding to context menu: {e}")
 
 def remove_from_context_menu():
-    reg_path = r"Directory\shell\RunMyApp"
+    reg_path = r"Directory\shell\ScrapeThisDirectory"
     try:
-        # Delete the 'command' subkey first
         with reg.OpenKey(reg.HKEY_CLASSES_ROOT, reg_path + r"\command", 0, reg.KEY_WRITE) as command_key:
             reg.DeleteKey(reg.HKEY_CLASSES_ROOT, reg_path + r"\command")
             print("Deleted 'command' subkey.")
-
-        # Delete the 'RunMyApp' key
         with reg.OpenKey(reg.HKEY_CLASSES_ROOT, reg_path, 0, reg.KEY_WRITE) as runmyapp_key:
             reg.DeleteKey(reg.HKEY_CLASSES_ROOT, reg_path)
-            print("Deleted 'RunMyApp' key.")
-
+            print("Deleted 'Scrape This Directory' key.")
         print("Context menu entry successfully removed!")
     except FileNotFoundError:
         print("Context menu entry not found.")
