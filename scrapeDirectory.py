@@ -3,10 +3,9 @@ import sys
 import winreg as reg
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
-import os
 import subprocess
 
-# Function to select a directory with Tkinter (fallback if no argument is passed)
+
 def select_directory():
     root = Tk()
     root.withdraw()
@@ -14,10 +13,10 @@ def select_directory():
     root.destroy()
     return directory
 
-# Function to combine and write file contents to output files
+
 def combine_file_contents(dir_path, output_folder):
     valid_extensions = ['.txt', '.py', '.md', '.yml', '.toml', '.json', '.yaml']
-    max_file_size = 10 * 1024 * 1024  # 10MB
+    max_file_size = 10 * 1024 * 1024  
     file_counter = 1
     current_file_size = 0
 
@@ -29,6 +28,8 @@ def combine_file_contents(dir_path, output_folder):
     for root, dirs, files in os.walk(dir_path):
         if '.venv' in dirs:
             dirs.remove('.venv')
+        if 'node_modules' in dirs:
+            dirs.remove('node_modules')
         for file_name in files:
             file_path = os.path.join(root, file_name)
             _, file_extension = os.path.splitext(file_name)
@@ -52,13 +53,8 @@ def combine_file_contents(dir_path, output_folder):
 
     outfile.close()
 
-# Add context menu entry
 def add_to_context_menu():
-    # Dynamically determine the correct path
-    if getattr(sys, 'frozen', False):  # Packaged with PyInstaller
-        app_path = sys.executable
-    else:
-        app_path = os.path.abspath(__file__)
+    app_path = sys.executable  # This will point to the .exe when packaged with PyInstaller
 
     reg_path = r"Directory\shell\RunMyApp"
     command_path = rf"{reg_path}\command"
@@ -93,38 +89,36 @@ def remove_from_context_menu():
     except Exception as e:
         print(f"Error removing context menu entry: {e}")
 
-# Main execution logic
 if __name__ == "__main__":
-    # If the script is run via the context menu, a folder path is passed as an argument
     if len(sys.argv) > 1:
-        directory_path = sys.argv[1]
+        action = sys.argv[1].lower()
+        if action == "add":
+            add_to_context_menu()
+        elif action == "remove":
+            remove_from_context_menu()
+        elif os.path.isdir(sys.argv[1]):
+            directory_path = sys.argv[1]
+        else:
+            print(f"Invalid argument: {sys.argv[1]}. Use 'add', 'remove', or pass a valid directory path.")
+            sys.exit()
     else:
-        # No folder passed, use the Tkinter GUI to select one
         directory_path = select_directory()
 
-    if directory_path:
-        script_directory = os.path.dirname(os.path.abspath(__file__))
-        scraped_folder = os.path.join(script_directory, "Scraped")
-        os.makedirs(scraped_folder, exist_ok=True)
-        selected_folder_name = os.path.basename(directory_path.rstrip(os.sep))
-        output_folder = os.path.join(scraped_folder, selected_folder_name)
+    if 'directory_path' in locals() and directory_path:
+        if getattr(sys, 'frozen', False):
+            script_directory = os.path.dirname(sys.executable)
+        else:
+            script_directory = os.path.dirname(os.path.abspath(__file__))
+
+        output_folder = os.path.join(os.path.expanduser("~\ScrapeUtility\ScrapedDirectories"), os.path.basename(directory_path.rstrip(os.sep)))
         os.makedirs(output_folder, exist_ok=True)
         print(f"Selected directory: {directory_path}")
         print(f"Output will be saved in: {output_folder}")
         combine_file_contents(directory_path, output_folder)
-        print(f"Directory structure written to: {output_folder}")
 
-
-        print(f"\nPress Enter to open the output folder. Closing the terminal will also close the folder.")
-        input() 
-
-        folder_process = subprocess.Popen(['explorer', output_folder])
-        
-    else:
-        print("No directory selected. Exiting.")
-
-    action = input("Type 'add' to add, 'remove' to remove the context menu entry, or press Enter to skip: ").strip().lower()
-    if action == "add":
-        add_to_context_menu()
-    elif action == "remove":
-        remove_from_context_menu()
+        if os.path.exists(output_folder):
+            print(f"\nPress Enter to open the output folder.")
+            input()
+            subprocess.Popen(['explorer', output_folder])
+        else:
+            print("Output folder does not exist.")
