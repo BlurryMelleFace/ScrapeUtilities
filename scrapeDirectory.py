@@ -15,7 +15,7 @@ def select_directory():
 
 
 def combine_file_contents(dir_path, output_folder):
-    valid_extensions = ['.txt', '.py', '.md', '.yml', '.toml', '.json', '.yaml']
+    valid_extensions = ['.txt', '.py', '.md', '.yml', '.toml', '.json', '.yaml','.html','.js','.css','.ts','.scss']
     max_file_size = 10 * 1024 * 1024  
     file_counter = 1
     current_file_size = 0
