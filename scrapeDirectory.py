@@ -33,6 +33,10 @@ def combine_file_contents(dir_path, output_folder):
         for file_name in files:
             file_path = os.path.join(root, file_name)
             _, file_extension = os.path.splitext(file_name)
+
+            if file_name.lower() == 'credentials.md':
+                continue
+
             if file_extension in valid_extensions:
                 try:
                     with open(file_path, 'r', encoding='utf-8') as infile:
