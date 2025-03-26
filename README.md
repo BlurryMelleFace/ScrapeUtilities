@@ -42,6 +42,9 @@ This repository provides tools and scripts to simplify the process of scraping a
    ```bash
    python -m pipx ensurepath
    ```
+   ```bash
+   source ~/.bashrc
+   ```
 3. Install Poetry for dependency management:
    ```bash
    pipx install poetry
