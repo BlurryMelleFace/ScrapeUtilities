@@ -37,10 +37,10 @@ This repository provides tools and scripts to simplify the process of scraping a
    ```
 2. Install Pipx
    ```bash
-   py -m pip install --user pipx
+   python -m pip install --user pipx
    ```
    ```bash
-   py -m pipx ensurepath
+   python -m pipx ensurepath
    ```
 3. Install Poetry for dependency management:
    ```bash
