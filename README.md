@@ -38,14 +38,23 @@ Make sure to close and re-open the terminal after each installation
    ```bash
    winget install -e --id Python.Python.3.13
    ```
-2. Install Pipx
+   
+   Check Versions
+   
+   ```bash
+   dir $Env:USERPROFILE\AppData\Local\Programs\Python\
+   ```
+   ```bash
+   dir $Env:USERPROFILE\AppData\Roaming\Python\
+   ```
+3. Install Pipx
    ```bash
    python -m pip install --user pipx
    ```
    ```bash
    python -m pipx ensurepath
    ```
-3. Install Poetry for dependency management:
+4. Install Poetry for dependency management:
    ```bash
    pipx install poetry
    ```
