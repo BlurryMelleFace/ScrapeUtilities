@@ -31,6 +31,9 @@ This repository provides tools and scripts to simplify the process of scraping a
 ## **Setup Instructions**
 
 ### **1. Prerequisites**
+
+Make sure to close and re-open the terminal after each installation
+
 1. Install Python 3.13
    ```bash
    winget install -e --id Python.Python.3.13
