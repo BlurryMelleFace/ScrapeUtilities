@@ -31,10 +31,20 @@ This repository provides tools and scripts to simplify the process of scraping a
 ## **Setup Instructions**
 
 ### **1. Prerequisites**
-1. Install Python 3.11
-2. Install Poetry for dependency management:
+1. Install Python 3.13
    ```bash
-   curl -sSL https://install.python-poetry.org | python3 -
+   winget install -e --id Python.Python.3.13
+   ```
+2. Install Pipx
+   ```bash
+   py -m pip install --user pipx
+   ```
+   ```bash
+   py -m pipx ensurepath
+   ```
+3. Install Poetry for dependency management:
+   ```bash
+   pipx install poetry
    ```
 
 ### **2. Clone the Repository**
